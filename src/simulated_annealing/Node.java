@@ -14,10 +14,12 @@ public class Node {
     // Coordinates
     private int x;
     private int y;
+    private String identifier;
     
-    public Node(int x, int y){
+    public Node(int x, int y, String identifier){
         this.x = x;
         this.y = y;
+        this.identifier = identifier;
     }
     /**
      * @return the x
@@ -46,5 +48,23 @@ public class Node {
     public void setY(int y) {
         this.y = y;
     }
-
+    
+     /**
+     * @return the identifier
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+    
+    // Euclidian distance
+    public double nodeDistance(Node node){
+        int x = Math.abs(getX() - node.getX());
+        int y = Math.abs(getY() - node.getY());
+        return Math.sqrt((x*x) + (y*y));
+    }
+    
+    @Override
+    public String toString(){
+        return getIdentifier() + "(" + getX()+", "+getY() + ")";
+    }
 }
