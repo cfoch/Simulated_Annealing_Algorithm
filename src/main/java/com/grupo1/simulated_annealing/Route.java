@@ -1,4 +1,4 @@
-package simulated_annealing;
+package com.grupo1.simulated_annealing;
 import java.util.ArrayList;
 import java.util.Collections;
 /*
