@@ -13,7 +13,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  * entre locaciones).
  * @author cfoch
  */
-public class Pista extends DefaultWeightedEdge {
+public class Pista extends DefaultWeightedEdge implements Comparable {
     @Override
     public final double getWeight() {
         Locacion origen, destino;
@@ -27,5 +27,18 @@ public class Pista extends DefaultWeightedEdge {
 
         euclides = new EuclideanDistance();
         return euclides.compute(origenPunto, destinoPunto);
+    }
+
+    @Override
+    public final int compareTo(final Object t) {
+        Pista pista;
+        double dif;
+        dif =  this.getWeight() - ((Pista) (t)).getWeight();
+        if (dif > 0) {
+            return 1;
+        } else if (dif < 0) {
+            return -1;
+        }
+        return 0;
     }
 }
