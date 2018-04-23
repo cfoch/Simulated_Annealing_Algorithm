@@ -212,8 +212,12 @@ public class VRPAlgorithm {
         int i;
         for (i = 0; i < solution.size(); i++) {
             GraphWalk walk;
+            ArrayList<Locacion> locaciones;
+            double routeDemand;
             walk = solution.get(i);
-            if (walk.getWeight() + weightToAdd <= maxWeight) {
+            locaciones = new ArrayList<Locacion>(walk.getVertexList());
+            routeDemand = this.getRouteDemand(locaciones);
+            if (routeDemand + weightToAdd <= maxWeight) {
                 return false;
             }
         }
@@ -249,7 +253,7 @@ public class VRPAlgorithm {
             Locacion locacion;
             GraphWalk route, newRoute;
             ArrayList<Locacion> routeList;
-            List<Locacion> newNodes;
+            ArrayList<Locacion> newNodes;
             int iRoute;
             int iNode;
             double newTotalDemand, newTotalWeight;
@@ -286,7 +290,7 @@ public class VRPAlgorithm {
                 continue;
             }
 
-            newNodes = route.getVertexList();
+            newNodes = new ArrayList<Locacion>(route.getVertexList());
             // Borrar nodo usado.
             randomNodes.remove(iNode);
             // Insertar nodo en ruta aleatoria y actualizar la ruta en solución.
