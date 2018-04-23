@@ -6,6 +6,7 @@
 package com.grupo1.simulated_annealing;
 
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import org.jgrapht.graph.GraphWalk;
 
 /**
@@ -13,12 +14,12 @@ import org.jgrapht.graph.GraphWalk;
  * @author Bryam
  */
 public final class SimulatedAnnealing {
-
     /**
      * The main application.
      */
     private SimulatedAnnealing() {
     }
+
     /**
      * Programa principal.
      * @param args the command line arguments
@@ -26,6 +27,7 @@ public final class SimulatedAnnealing {
     public static void main(final String[] args) {
         VRPProblem problem;
         VRPAlgorithm algorithm;
+        JFrame frame;
         ArrayList<GraphWalk> solution;
         ArrayList<Locacion> check;
         int i, j;
@@ -39,6 +41,10 @@ public final class SimulatedAnnealing {
                 + algorithm.getSolutionWeight(solution));
         System.out.println("Solucion valida: "
                 + algorithm.validateSolution(solution));
+
+        frame = SolutionVisualization.getSolutionVisualizationFrame(problem,
+                solution);
+        frame.setVisible(true);
     }
 
 }
