@@ -119,4 +119,13 @@ public class Locacion {
     public final boolean esServicio() {
         return servicio != null;
     }
+
+    @Override
+    public final String toString() {
+        if (this.getServicio() != null) {
+            return String.format("%s[%d]", this.getNombre(),
+                    this.getServicio().getDemanda());
+        }
+        return this.getNombre();
+    }
 }
