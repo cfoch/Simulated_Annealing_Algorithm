@@ -100,7 +100,7 @@ public class VRPProblem implements GRParser {
                     line = line.replace("CAPACITY : ", "");
                     capacidad = Integer.parseInt(line);
                     vehiculoTipo = new Vehiculo.Tipo(line, capacidad);
-                } else if (line.startsWith("NODE_COORD_SECTION ")) {
+                } else if (line.startsWith("NODE_COORD_SECTION")) {
                     for (iNodo = 1; iNodo <= nNodos; iNodo++) {
                         Locacion locacion;
                         String[] tokens;
@@ -108,6 +108,7 @@ public class VRPProblem implements GRParser {
                         Servicio servicio;
 
                         line = br.readLine();
+                        line = line.trim();
                         tokens = line.split(" ");
 
                         nombre = "Locacion " + iNodo;
@@ -118,7 +119,7 @@ public class VRPProblem implements GRParser {
                         locacionesMap.put(iNodo, locacion);
                         getGrafo().addVertex(locacion);
                     }
-                } else if (line.startsWith("DEMAND_SECTION ")) {
+                } else if (line.startsWith("DEMAND_SECTION")) {
                     for (iNodo = 1; iNodo <= nNodos; iNodo++) {
                         Locacion locacion;
                         String[] tokens;
