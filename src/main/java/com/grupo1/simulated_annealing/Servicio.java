@@ -5,15 +5,15 @@
  */
 package com.grupo1.simulated_annealing;
 
-import com.graphhopper.jsprit.core.problem.job.Service;
-
 /**
  *
  * @author cfoch
  */
 public class Servicio {
-    private Service service;
+    private String nombre;
     private Locacion locacion;
+    private int demanda;
+    private Dimensiones dimension;
 
     /**
      * Constructor del Servicio. El servicio representa la tarea de hacer un
@@ -24,12 +24,10 @@ public class Servicio {
      */
     public Servicio(final String nombre, final Locacion locacion,
             final int demandaPeso) {
-        Service.Builder builder;
-        builder = Service.Builder.newInstance(nombre);
-        builder =
-            builder.addSizeDimension(Dimensiones.PESO.ordinal(), demandaPeso);
-        builder = builder.setLocation(locacion.getLocation());
-        this.service = builder.build();
+        // Por ahora solo dimension PESO es soportada.
+        this.dimension = Dimensiones.PESO;
+        this.nombre = nombre;
+        this.demanda = demandaPeso;
         this.locacion = locacion;
     }
 
@@ -38,6 +36,6 @@ public class Servicio {
      * @return (int) la demanda
      */
     public final int getDemanda() {
-        return service.getSize().get(Dimensiones.PESO.ordinal());
+        return demanda;
     }
 }
