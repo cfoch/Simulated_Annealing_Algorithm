@@ -336,7 +336,7 @@ public class VRPAlgorithm {
                 }
                 nuevaDemanda =
                         servicio.getServicio().getDemanda() + demandaTotal;
-                if (nuevaDemanda < problem.getVehiculoTipo().getCapacidad()) {
+                if (nuevaDemanda <= problem.getVehiculoTipo().getCapacidad()) {
                     if (!serviciosVisitados.contains(servicio)) {
                         if (!ruta.isEmpty()) {
                             Pista pista;
@@ -350,6 +350,11 @@ public class VRPAlgorithm {
                     }
                 }
             }
+
+            if (ruta.size() == 0) {
+                continue;
+            }
+
             // Agregar depósito como punto inicial y final.
             ruta.add(0, problem.getPuntoDePartida());
             ruta.add(problem.getPuntoDePartida());
