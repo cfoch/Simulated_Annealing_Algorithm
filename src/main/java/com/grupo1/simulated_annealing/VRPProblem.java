@@ -29,7 +29,7 @@ public class VRPProblem implements GRParser {
      * Crea un problema de VRP a partir de la ruta de un archivo.
      * @param path ruta del archivo.
      */
-    VRPProblem(final String path) {
+    public VRPProblem(final String path) {
         grafo = new SimpleGraph<>(Pista.class);
         fromFile(path);
     }
