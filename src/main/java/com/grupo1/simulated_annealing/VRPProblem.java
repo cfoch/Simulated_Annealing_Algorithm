@@ -5,6 +5,7 @@
  */
 package com.grupo1.simulated_annealing;
 
+import static com.grupo1.misc.LocationGeneration.genLocaciones;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,6 +25,48 @@ public class VRPProblem implements GRParser {
     private Graph<Locacion, Pista> grafo;
     private Vehiculo.Tipo vehiculoTipo;
     private Locacion puntoDePartida;
+
+    /**
+     * Crea un problema de VRP aleatoriamente al rededor de un punto a cierto
+     * radio.
+     * @param n Número de locaciones
+     * @param x0 Latitud
+     * @param y0 Longitud
+     * @param radio El radio al rededor de (x0, y0).
+     * @param vehiculoTipo El tipo de vehículo que realizará los repartos a
+     *  tales locaciones.
+     */
+    public VRPProblem(final int n, final double x0, final double y0,
+            final double radio, final Vehiculo.Tipo vehiculoTipo) {
+        ArrayList<Locacion> locaciones;
+        int i, j;
+
+        grafo = new SimpleGraph<>(Pista.class);
+        this.vehiculoTipo = vehiculoTipo;
+        locaciones = genLocaciones(n, x0, y0, radio, true, vehiculoTipo);
+        for (i = 0; i < locaciones.size(); i++) {
+            Locacion locacion;
+            locacion = locaciones.get(i);
+            if (locacion.getTipo() == Locacion.Tipo.DEPOSITO) {
+                puntoDePartida = locacion;
+            }
+            getGrafo().addVertex(locacion);
+        }
+
+        locaciones = new ArrayList<>(getGrafo().vertexSet());
+        for (i = 0; i < locaciones.size(); i++) {
+            Locacion v1;
+            v1 = locaciones.get(i);
+            for (j = 0; j < locaciones.size(); j++) {
+                Locacion v2;
+                v2 = locaciones.get(j);
+                if (i == j) {
+                    continue;
+                }
+                getGrafo().addEdge(v1, v2);
+            }
+        }
+    }
 
     /**
      * Crea un problema de VRP a partir de la ruta de un archivo.
