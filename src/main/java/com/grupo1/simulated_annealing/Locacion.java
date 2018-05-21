@@ -36,7 +36,7 @@ public class Locacion {
      * @param x La coordenada en x.
      * @param y La coordenada en y.
      */
-    Locacion(final int id, final String nombre, final Locacion.Tipo tipo,
+    public Locacion(final int id, final String nombre, final Locacion.Tipo tipo,
             final double x, final double y) {
         Location.Builder builder;
         builder = Location.Builder.newInstance();
