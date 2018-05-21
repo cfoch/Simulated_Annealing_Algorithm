@@ -5,9 +5,6 @@
  */
 package com.grupo1.simulated_annealing;
 
-import com.graphhopper.jsprit.core.problem.Location;
-import com.graphhopper.jsprit.core.util.Coordinate;
-
 /**
  *
  * @author cfoch
@@ -22,9 +19,11 @@ public class Locacion {
     };
 
     private int id;
-    private Location location;
     private Tipo tipo;
     private Servicio servicio;
+    private String nombre;
+    private double x;
+    private double y;
 
     /**
      * Crea una locación. Una locación es la representación de un lugar
@@ -38,21 +37,11 @@ public class Locacion {
      */
     public Locacion(final int id, final String nombre, final Locacion.Tipo tipo,
             final double x, final double y) {
-        Location.Builder builder;
-        builder = Location.Builder.newInstance();
-        builder = builder.setCoordinate(Coordinate.newInstance(x, y));
-        builder = builder.setName(nombre);
+        this.x = x;
+        this.y = y;
+        this.nombre = nombre;
         this.tipo = tipo;
         this.servicio = null;
-        this.location = builder.build();
-    }
-
-    /**
-     * Obtiene una Location de JSprit.
-     * @return una Location.
-     */
-    public final Location getLocation() {
-        return location;
     }
 
     /**
@@ -60,7 +49,7 @@ public class Locacion {
      * @return un nombre.
     */
     public final String getNombre() {
-        return location.getName();
+        return nombre;
     }
 
 
@@ -69,7 +58,7 @@ public class Locacion {
      * @return la coordenada en x.
     */
     public final double getX() {
-        return location.getCoordinate().getX();
+        return x;
     }
 
     /**
@@ -77,7 +66,7 @@ public class Locacion {
      * @return la coordenada en y.
     */
     public final double getY() {
-        return location.getCoordinate().getY();
+        return y;
     }
 
     /**

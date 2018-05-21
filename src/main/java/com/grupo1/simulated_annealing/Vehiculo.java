@@ -5,12 +5,6 @@
  */
 package com.grupo1.simulated_annealing;
 
-import com.graphhopper.jsprit.core.problem.Capacity;
-import com.graphhopper.jsprit.core.problem.vehicle.Vehicle;
-import com.graphhopper.jsprit.core.problem.vehicle.VehicleImpl;
-import com.graphhopper.jsprit.core.problem.vehicle.VehicleType;
-import com.graphhopper.jsprit.core.problem.vehicle.VehicleTypeImpl;
-
 /**
  *
  * @author cfoch
@@ -20,7 +14,9 @@ public class Vehiculo {
      * El tipo de Vehículo.
      */
     public static class Tipo {
-        private final VehicleType vehicleType;
+        private final String id;
+        private final Dimensiones dimension;
+        private final int capacidad;
 
         /**
          * Crea un tipo de vehículo.
@@ -28,11 +24,10 @@ public class Vehiculo {
          * @param capacidadPeso La capacidad máxima del vehículo.
          */
         Tipo(final String id, final int capacidadPeso) {
-            VehicleTypeImpl.Builder builder;
-            builder = VehicleTypeImpl.Builder.newInstance(id);
-            builder.addCapacityDimension(Dimensiones.PESO.ordinal(),
-                    capacidadPeso);
-            vehicleType = builder.build();
+            // Solo PESO soportado por ahora.
+            this.id = id;
+            this.dimension = Dimensiones.PESO;
+            this.capacidad = capacidadPeso;
         }
 
         /**
@@ -40,7 +35,7 @@ public class Vehiculo {
          * @return un id.
          */
         public final String getId() {
-            return getVehicleType().getTypeId();
+            return id;
         }
 
         /**
@@ -48,22 +43,13 @@ public class Vehiculo {
          * @return (int) peso.
          */
         public final int getCapacidad() {
-            Capacity capacity;
-            capacity = getVehicleType().getCapacityDimensions();
-            return capacity.get(Dimensiones.PESO.ordinal());
-        }
-
-        /**
-         * Obtiene el VehiculeType de jsprit.
-         * @return un VehicleType.
-         */
-        public final VehicleType getVehicleType() {
-            return vehicleType;
+            return capacidad;
         }
     }
 
-    private Vehicle vehicle;
     private Vehiculo.Tipo tipo;
+    private String placa;
+    private Locacion locacionInicio;
 
     /**
      * Crea un vehículo.
@@ -73,19 +59,9 @@ public class Vehiculo {
      */
     Vehiculo(final String placa, final Vehiculo.Tipo tipo,
             final Locacion locacionInicio) {
-        VehicleImpl.Builder builder = VehicleImpl.Builder.newInstance(placa);
-        builder.setType(tipo.getVehicleType());
-        builder.setStartLocation(locacionInicio.getLocation());
+        this.placa = placa;
         this.tipo = tipo;
-        vehicle = builder.build();
-    }
-
-    /**
-     * Obtiene un Vehicle de jsprit.
-     * @return un Vehicle.
-     */
-    public final Vehicle getVehicle() {
-        return vehicle;
+        this.locacionInicio = locacionInicio;
     }
 
     /**
