@@ -32,7 +32,9 @@ public final class SimulatedAnnealing {
         ArrayList<Locacion> check;
         int i, j;
 
-        problem = new VRPProblem("datasets/CVRP/augerat/A/A-n80-k10.vrp");
+        //problem = new VRPProblem("datasets/CVRP/augerat/A/A-n80-k10.vrp");
+        Vehiculo.Tipo vehiculoTipo = new Vehiculo.Tipo("Foo", 100);
+        problem = new VRPProblem(50, 40, 40, 1000, vehiculoTipo);
         algorithm = new VRPAlgorithm(problem);
         solution = algorithm.solve();
 

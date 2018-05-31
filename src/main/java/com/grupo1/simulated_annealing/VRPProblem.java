@@ -25,6 +25,7 @@ public class VRPProblem implements GRParser {
     private Graph<Locacion, Pista> grafo;
     private Vehiculo.Tipo vehiculoTipo;
     private Locacion puntoDePartida;
+    private double[][] distanceMatrix;
 
     /**
      * Crea un problema de VRP aleatoriamente al rededor de un punto a cierto
@@ -81,12 +82,14 @@ public class VRPProblem implements GRParser {
      * Crea un problema de VRP a partir de un grafo de locaciones (usualmente
      * todas servicios excepto una, el depósito) y un tipo de vehículo.
      * @param grafo un grafo de de locaciones
+     * @param puntoPartida una locacion de tipo DEPOSITO.
      * @param vehiculoTipo el tipo del vehículo.
      */
-    VRPProblem(final Graph<Locacion, Pista> grafo,
-            final Vehiculo.Tipo vehiculoTipo) {
+    public VRPProblem(final Graph<Locacion, Pista> grafo,
+            final Locacion puntoPartida, final Vehiculo.Tipo vehiculoTipo) {
         //this.mapa = mapa;
         this.grafo = grafo;
+        this.puntoDePartida = puntoPartida;
         this.vehiculoTipo = vehiculoTipo;
     }
 

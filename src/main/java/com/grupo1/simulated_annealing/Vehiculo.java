@@ -23,7 +23,7 @@ public class Vehiculo {
          * @param id Identificador del vehiculo.
          * @param capacidadPeso La capacidad máxima del vehículo.
          */
-        Tipo(final String id, final int capacidadPeso) {
+        public Tipo(final String id, final int capacidadPeso) {
             // Solo PESO soportado por ahora.
             this.id = id;
             this.dimension = Dimensiones.PESO;
@@ -57,7 +57,7 @@ public class Vehiculo {
      * @param tipo el tipo de vehículo.
      * @param locacionInicio el depósito al cual pertenece el vehículo.
      */
-    Vehiculo(final String placa, final Vehiculo.Tipo tipo,
+    public Vehiculo(final String placa, final Vehiculo.Tipo tipo,
             final Locacion locacionInicio) {
         this.placa = placa;
         this.tipo = tipo;

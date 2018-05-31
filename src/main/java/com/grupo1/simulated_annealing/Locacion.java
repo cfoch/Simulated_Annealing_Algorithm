@@ -18,12 +18,13 @@ public class Locacion {
         OTRO
     };
 
-    private int id;
+    private long id;
     private Tipo tipo;
     private Servicio servicio;
     private String nombre;
     private double x;
     private double y;
+    private VRPCostMatrix costMatrix;
 
     /**
      * Crea una locación. Una locación es la representación de un lugar
@@ -35,13 +36,15 @@ public class Locacion {
      * @param x La coordenada en x.
      * @param y La coordenada en y.
      */
-    public Locacion(final int id, final String nombre, final Locacion.Tipo tipo,
-            final double x, final double y) {
+    public Locacion(final long id, final String nombre,
+            final Locacion.Tipo tipo, final double x, final double y) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.nombre = nombre;
         this.tipo = tipo;
         this.servicio = null;
+        this.costMatrix = null;
     }
 
     /**
@@ -116,5 +119,38 @@ public class Locacion {
                     this.getServicio().getDemanda());
         }
         return this.getNombre();
+    }
+
+    /**
+     * Obtiene el costo de ir a una locacion destino.
+     * @param destino
+     * @return El valor del costo. -1 en caso de error.
+     */
+    public final double getCost(final Locacion destino) {
+        if (getCostMatrix() == null) {
+            return -1;
+        }
+        return getCostMatrix().getCost(this, destino);
+    }
+
+    /**
+     * Obtiene el identificador de la locación.
+     * @return the id
+     */
+    public long getId() {
+        return id;
+    }
+    /**
+     * @return the costMatrix
+     */
+    public VRPCostMatrix getCostMatrix() {
+        return costMatrix;
+    }
+
+    /**
+     * @param costMatrix the costMatrix to set
+     */
+    public void setCostMatrix(VRPCostMatrix costMatrix) {
+        this.costMatrix = costMatrix;
     }
 }

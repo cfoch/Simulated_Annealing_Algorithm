@@ -5,7 +5,6 @@
  */
 package com.grupo1.simulated_annealing;
 
-import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 /**
@@ -17,16 +16,14 @@ public class Pista extends DefaultWeightedEdge implements Comparable {
     @Override
     public final double getWeight() {
         Locacion origen, destino;
-        EuclideanDistance euclides;
+        VRPCostMatrix costMatrix;
+        double cost;
         double[] origenPunto, destinoPunto;
 
         origen = (Locacion) getSource();
         destino = (Locacion) getTarget();
-        origenPunto = new double[]{origen.getX(), origen.getX()};
-        destinoPunto = new double[]{destino.getY(), origen.getY()};
-
-        euclides = new EuclideanDistance();
-        return euclides.compute(origenPunto, destinoPunto);
+        cost = origen.getCost(destino);
+        return cost;
     }
 
     @Override
