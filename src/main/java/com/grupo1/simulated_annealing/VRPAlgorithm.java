@@ -5,6 +5,7 @@
  */
 package com.grupo1.simulated_annealing;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,14 @@ import org.jgrapht.graph.GraphWalk;
  * @author cfoch
  */
 public class VRPAlgorithm {
+    public static class VRPAlgorithmSolutionNotPossible extends Exception {
+        public VRPAlgorithmSolutionNotPossible() {
+            super();
+        }
+        public VRPAlgorithmSolutionNotPossible(String msg) {
+            super(msg);
+        }
+    }
     public static final double DEFAULT_COOLING_RATE = 0.99;
     public static final int DEFAULT_INITIAL_TEMPERATURE = 5000;
     public static final double DEFAULT_ITERATION_MULTIPLIER = 1.05;
@@ -27,6 +36,7 @@ public class VRPAlgorithm {
     public static final int DEFAULT_MAX_TIME = 10000;
     public static final int DEFAULT_N_MOVE = 5;
     public static final int DEFAULT_N_RHA = 5;
+    public static final int DEFAULT_MIN_N_MOVE = 1;
     public static final double DEFAULT_MOVE_PROBABABILTY = 0.8;
     public static final double DEFAULT_MINIMUM_TEMPERATURE = 0.001;
 
@@ -65,16 +75,48 @@ public class VRPAlgorithm {
      * Crea un algoritmo para resolver un problema CVRP.
      * @param problem un VRPProblem.
      */
-    public VRPAlgorithm(final VRPProblem problem) {
+    public VRPAlgorithm(final VRPProblem problem)
+            throws VRPAlgorithmSolutionNotPossible {
+        Locacion locacion;
         this.problem = problem;
+
+        locacion = isPossibleToSolve();
+        if (locacion != null) {
+            throw new VRPAlgorithmSolutionNotPossible(String.format(
+                    "El servicio %d excede la capacidad máxima del vehículo"
+                            + "cuya capacidad es de %d",
+                    locacion.getServicio().getDemanda(),
+                    problem.getVehiculoTipo().getClass()));
+        }
         coolingRate = DEFAULT_COOLING_RATE;
         initialTemperature = DEFAULT_INITIAL_TEMPERATURE;
         iterationMultiplier = DEFAULT_ITERATION_MULTIPLIER;
         initialTimeToUpdate = DEFAULT_INITIAL_TIME_TO_UPDATE;
         maxTime = DEFAULT_MAX_TIME;
-        nMove = DEFAULT_N_MOVE;
+        if (problem.getGrafo().vertexSet().size() <= 2) {
+            nMove = 0;
+        } else if (problem.getGrafo().vertexSet().size() <= DEFAULT_N_MOVE + 1) {
+            nMove = DEFAULT_MIN_N_MOVE;
+        } else {
+            nMove = DEFAULT_N_MOVE;
+        }
         nRHA = DEFAULT_N_RHA;
         moveProbability = DEFAULT_MOVE_PROBABABILTY;
+    }
+
+    private Locacion isPossibleToSolve() {
+        Locacion ret = null;
+        Vehiculo.Tipo vehiculoTipo = this.problem.getVehiculoTipo();
+        for (Locacion locacion : this.problem.getGrafo().vertexSet()) {
+            if (locacion.getTipo() == Locacion.Tipo.OTRO) {
+                int demandaServicio = locacion.getServicio().getDemanda();
+                if (demandaServicio > vehiculoTipo.getCapacidad()) {
+                    ret = locacion;
+                    break;
+                }
+            }
+        }
+        return ret;
     }
 
     /**
@@ -237,6 +279,7 @@ public class VRPAlgorithm {
         ArrayList<Locacion> randomNodes;
         ArrayList<GraphWalk> solution;
         Random random;
+        int newNMove;
 
         solution = new ArrayList<GraphWalk>(oldSolution);
 
@@ -245,7 +288,9 @@ public class VRPAlgorithm {
         // Get the list of nodes that will not be moved.
         fixedNodes = getFixedNodes(minEdges);
         // Pick the random nodes that will be re-inserted.
-        randomNodes = pickRandomMoves(nMove, solution, fixedNodes);
+        newNMove = min(nMove,
+                abs(problem.getGrafo().vertexSet().size() - fixedNodes.size() - 1));
+        randomNodes = pickRandomMoves(newNMove, solution, fixedNodes);
         assert disjoint(fixedNodes, randomNodes);
 
         random = new Random();

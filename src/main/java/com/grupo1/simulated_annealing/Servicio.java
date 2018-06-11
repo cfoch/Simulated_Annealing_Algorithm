@@ -38,4 +38,18 @@ public class Servicio {
     public final int getDemanda() {
         return demanda;
     }
+
+    /**
+     * @return the locacion
+     */
+    public Locacion getLocacion() {
+        return locacion;
+    }
+
+    /**
+     * @param locacion the locacion to set
+     */
+    public void setLocacion(Locacion locacion) {
+        this.locacion = locacion;
+    }
 }

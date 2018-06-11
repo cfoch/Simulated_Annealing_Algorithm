@@ -12,8 +12,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -22,6 +24,15 @@ import org.jgrapht.graph.SimpleGraph;
  * @author cfoch
  */
 public class VRPProblem implements GRParser {
+    public static class VRPProblemInvalidGraph extends Exception {
+        public VRPProblemInvalidGraph() {
+            super();
+        }
+        public VRPProblemInvalidGraph(String message) {
+            super(message);
+        }
+    }
+
     private Graph<Locacion, Pista> grafo;
     private Vehiculo.Tipo vehiculoTipo;
     private Locacion puntoDePartida;
@@ -84,13 +95,44 @@ public class VRPProblem implements GRParser {
      * @param grafo un grafo de de locaciones
      * @param puntoPartida una locacion de tipo DEPOSITO.
      * @param vehiculoTipo el tipo del vehículo.
+     * @throws com.grupo1.simulated_annealing.VRPProblem.VRPProblemInvalidGraph
+     * @throws java.lang.Exception
      */
     public VRPProblem(final Graph<Locacion, Pista> grafo,
-            final Locacion puntoPartida, final Vehiculo.Tipo vehiculoTipo) {
-        //this.mapa = mapa;
+            final Locacion puntoPartida, final Vehiculo.Tipo vehiculoTipo)
+            throws VRPProblemInvalidGraph {
+        if (!validateGrafo(grafo, puntoPartida)) {
+            throw new VRPProblemInvalidGraph("Grafo de servicios inválido. No"
+                    + "se pudo construir el problema VRP.");
+        }
         this.grafo = grafo;
         this.puntoDePartida = puntoPartida;
         this.vehiculoTipo = vehiculoTipo;
+    }
+
+    public final boolean validateGrafo(final Graph<Locacion, Pista> grafo,
+            final Locacion puntoPartida) {
+        int nServicios = 0, nDepositos = 0, i;
+        boolean ret;
+        List<Locacion> locaciones, depositos, servicios;
+
+        locaciones = new ArrayList<>(grafo.vertexSet());
+        // Verificar un solo depósito.
+        depositos = locaciones.stream()
+                .filter((l) -> l.getTipo() == Locacion.Tipo.DEPOSITO)
+                .collect(Collectors.toList());
+        ret = depositos != null && depositos.size() == 1;
+        if (puntoPartida != null) {
+            ret = ret && depositos.get(0) == puntoPartida;
+        }
+        // Verificar que el resto sea locaciones.
+        servicios = locaciones.stream()
+                .filter((l) -> l.getTipo() == Locacion.Tipo.OTRO &&
+                        l.getServicio() != null &&
+                        l.getServicio().getLocacion() == l)
+                .collect(Collectors.toList());
+        ret = ret && (servicios.size() + 1 == locaciones.size());
+        return ret;
     }
 
     /**
@@ -145,7 +187,7 @@ public class VRPProblem implements GRParser {
                         && iNodo == 0) {
                     line = line.replace("CAPACITY : ", "");
                     capacidad = Integer.parseInt(line);
-                    vehiculoTipo = new Vehiculo.Tipo(line, capacidad);
+                    setVehiculoTipo(new Vehiculo.Tipo(line, capacidad));
                 } else if (line.startsWith("NODE_COORD_SECTION")) {
                     for (iNodo = 1; iNodo <= nNodos; iNodo++) {
                         Locacion locacion;
@@ -213,5 +255,12 @@ public class VRPProblem implements GRParser {
         } catch (IOException ex) {
             Logger.getLogger(Mapa.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * @param vehiculoTipo the vehiculoTipo to set
+     */
+    public void setVehiculoTipo(Vehiculo.Tipo vehiculoTipo) {
+        this.vehiculoTipo = vehiculoTipo;
     }
 }

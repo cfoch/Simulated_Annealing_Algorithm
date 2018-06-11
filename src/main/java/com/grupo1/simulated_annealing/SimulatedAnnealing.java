@@ -6,6 +6,8 @@
 package com.grupo1.simulated_annealing;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.jgrapht.graph.GraphWalk;
 
@@ -34,19 +36,23 @@ public final class SimulatedAnnealing {
 
         //problem = new VRPProblem("datasets/CVRP/augerat/A/A-n80-k10.vrp");
         Vehiculo.Tipo vehiculoTipo = new Vehiculo.Tipo("Foo", 100);
-        problem = new VRPProblem(50, 40, 40, 1000, vehiculoTipo);
-        algorithm = new VRPAlgorithm(problem);
-        solution = algorithm.solve();
+        problem = new VRPProblem(32, 40, 40, 1000, vehiculoTipo);
+        try {
+            algorithm = new VRPAlgorithm(problem);
+            solution = algorithm.solve();
 
-        algorithm.printSolution(solution);
-        System.out.println("Best solution: "
-                + algorithm.getSolutionWeight(solution));
-        System.out.println("Solucion valida: "
-                + algorithm.validateSolution(solution));
+            algorithm.printSolution(solution);
+            System.out.println("Best solution: "
+                    + algorithm.getSolutionWeight(solution));
+            System.out.println("Solucion valida: "
+                    + algorithm.validateSolution(solution));
 
-        frame = SolutionVisualization.getSolutionVisualizationFrame(problem,
-                solution);
-        frame.setVisible(true);
+            frame = SolutionVisualization.getSolutionVisualizationFrame(problem,
+                    solution);
+            frame.setVisible(true);
+        } catch (VRPAlgorithm.VRPAlgorithmSolutionNotPossible ex) {
+            Logger.getLogger(SimulatedAnnealing.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
